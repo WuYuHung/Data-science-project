@@ -45,17 +45,38 @@ def preprocessing(raw_df: pd.DataFrame, method: str) -> list:
     df = feature_select(raw_df, method)
     df = df
     return df
-def labling(raw_df: pd.DataFrame) 
-    
+
+
+def labling(df: pd.DataFrame):
+    award = pd.read_csv("data/2005.csv")
+    print(df)
+    #df["label"] = ""
+    #df["POS"] = ""
+    for index, row in df.iterrows():
+        if index % 100 == 0:
+            print(index)
+        temp_df = award[(award.yearID == row["yearID"]) &
+                        (award.playerID == row["playerID"])]
+        if len(temp_df):
+            df["POS"][index] = temp_df.iloc[0]["POS"]
+        '''
+        if(award["yearID"][j] == df["yearID"][index]):
+            if(award["playerID"][j] == df["playerID"][index]):
+                df["lable"][index] = 1
+        else:
+            df["lable"][index] = 0
+        '''
+    df.to_csv("dick data/training_POS.csv")
 
 
 def main():
     """entry point"""
-    raw_df = pd.read_csv("data/calculated_data.csv")
-    df = preprocessing(raw_df, method="data")
-    df = labling (raw_df)
-    #test = pd.read_csv("data/test.csv")
-    #test_df = preprocessing(test, method="data")
+    raw_df = pd.read_csv("data/training_POS.csv")
+   # df = preprocessing(raw_df, method="data")
+    labling(raw_df)
+
+    # test = pd.read_csv("data/test.csv")
+    # test_df = preprocessing(test, method="data")
 
     # TODO: 重點就在這，怎麼用training data生出prediction？ 這就有很多種方法了，反正生出一個叫prediction的2D list
 
